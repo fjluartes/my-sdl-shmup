@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "configurePresets": [{
+    "name": "default",
+    "binaryDir": "build",
+    "generator": "MinGW Makefiles"
+  }],
+  "buildPresets": [{
+    "name": "default",
+    "configurePreset": "default"
+  }]
+}
