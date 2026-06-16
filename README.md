@@ -2,7 +2,7 @@
 
 Shoot-em-up in SDL2
 
-From [this SDL2 tutorial](https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php)
+From [Parallel Realities SDL2 tutorial](https://www.parallelrealities.co.uk/tutorials/shooter/shooter1.php)
 
 ## TODO
 - [ ] 03: Moving the player
