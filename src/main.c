@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
     player.x = SCREEN_WIDTH - 800;
     player.y = SCREEN_HEIGHT - 600;
-    player.texture = loadTexture("gfx/player_small.png");
+    player.texture = loadTexture("gfx/player.png");
 
 	atexit(cleanup);
 
