@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
  */
+typedef struct Entity Entity;
 
 typedef struct {
     void (*logic)(void);

@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
+ * Revision 2026-06-17 fjluartes
  */
 
 #include "common.h"
@@ -9,27 +10,31 @@
 #include "init.h"
 #include "input.h"
 #include "main.h"
+#include "stage.h"
 
 App app;
-Entity player;
-Entity bullet;
+Stage stage;
+
+static void capFrameRate(long *then, float *remainder);
 
 int main(int argc, char *argv[])
 {
     (void)argc;
     (void)argv;
+
+    long then;
+    float remainder;
 	memset(&app, 0, sizeof(App));
-    memset(&player, 0, sizeof(Entity));
-    memset(&bullet, 0, sizeof(Entity));
 
 	initSDL();
 
-	player.texture = loadTexture("gfx/player.png");
-    player.x = 100;
-    player.y = 100;
-    bullet.texture = loadTexture("gfx/playerBullet.png");
-
 	atexit(cleanup);
+
+	initStage();
+
+	then = SDL_GetTicks();
+
+	remainder = 0;
 
 	while (1)
 	{
@@ -37,51 +42,27 @@ int main(int argc, char *argv[])
 
 		doInput();
 
-		player.x += player.dx;
-		player.y += player.dy;
+		app.delegate.logic();
 
-		if (app.up) {
-            player.y -= 8;
-        }
-        else if (app.down) {
-            player.y += 8;
-        }
-		if (app.left) {
-            player.x -= 8;
-        }
-        else if (app.right) {
-            player.x += 8;
-        }
-		// Restrict player to screen bounds
-		if (player.y < 0) player.y = 0;
-		else if (player.y > SCREEN_HEIGHT - 8) player.y = SCREEN_HEIGHT - 8;
-		else if (player.x < 0) player.x = 0;
-		else if (player.x > SCREEN_WIDTH - 8) player.x = SCREEN_WIDTH - 8;
-
-		if (app.fire && bullet.health == 0)
-		{
-		    bullet.x = player.x + 12;
-			bullet.y = player.y + 16;
-			bullet.dx = 20;
-			bullet.dy = 0;
-			bullet.health = 1;
-		}
-		bullet.x += bullet.dx;
-		bullet.y += bullet.dy;
-
-		if (bullet.x > SCREEN_WIDTH) bullet.health = 0;
-
-		blit(player.texture, player.x, player.y);
-
-		if (bullet.health > 0)
-		{
-		    blit(bullet.texture, bullet.x, bullet.y);
-		}
+		app.delegate.draw();
 
 		presentScene();
 
-		SDL_Delay(16);
+		capFrameRate(&then, &remainder);
 	}
 
 	return 0;
+}
+
+static void capFrameRate(long *then, float *remainder)
+{
+    long wait, frameTime;
+    wait = 16 + *remainder;
+    *remainder -= SDL_GetTicks() - *then;
+    frameTime = SDL_GetTicks() - *then;
+    wait -= frameTime;
+    if (wait < 1) wait = 1;
+    SDL_Delay(wait);
+    *remainder += 0.667;
+    *then = SDL_GetTicks();
 }
