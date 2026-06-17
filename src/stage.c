@@ -60,7 +60,7 @@ static void doPlayer(void)
     if (app.keyboard[SDL_SCANCODE_UP]) player->dy = -PLAYER_SPEED;
     else if (app.keyboard[SDL_SCANCODE_DOWN]) player->dy = PLAYER_SPEED;
     else if (app.keyboard[SDL_SCANCODE_LEFT]) player->dx = -PLAYER_SPEED;
-    else if (app.keyboard[SDL_SCANCODE_RIGHT]) player->dx = PLAYER_SPEED;
+    else if (app.keyboard[SDL_SCANCODE_RIGHT]) player->dy = PLAYER_SPEED;
     else if (app.keyboard[SDL_SCANCODE_SPACE] && player->reload == 0) fireBullet();
 
     player->x += player->dx;
