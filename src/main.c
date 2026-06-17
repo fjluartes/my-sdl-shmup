@@ -12,6 +12,7 @@
 
 App app;
 Entity player;
+Entity bullet;
 
 int main(int argc, char *argv[])
 {
@@ -19,12 +20,14 @@ int main(int argc, char *argv[])
     (void)argv;
 	memset(&app, 0, sizeof(App));
     memset(&player, 0, sizeof(Entity));
+    memset(&bullet, 0, sizeof(Entity));
 
 	initSDL();
 
-    player.x = SCREEN_WIDTH - 800;
-    player.y = SCREEN_HEIGHT - 600;
-    player.texture = loadTexture("gfx/player.png");
+	player.texture = loadTexture("gfx/player.png");
+    player.x = 100;
+    player.y = 100;
+    bullet.texture = loadTexture("gfx/playerBullet.png");
 
 	atexit(cleanup);
 
@@ -33,6 +36,9 @@ int main(int argc, char *argv[])
 		prepareScene();
 
 		doInput();
+
+		player.x += player.dx;
+		player.y += player.dy;
 
 		if (app.up) {
             player.y -= 8;
@@ -52,7 +58,25 @@ int main(int argc, char *argv[])
 		else if (player.x < 0) player.x = 0;
 		else if (player.x > SCREEN_WIDTH - 8) player.x = SCREEN_WIDTH - 8;
 
-        blit(player.texture, player.x, player.y);
+		if (app.fire && bullet.health == 0)
+		{
+		    bullet.x = player.x;
+			bullet.y = player.y;
+			bullet.dx = 20;
+			bullet.dy = 0;
+			bullet.health = 1;
+		}
+		bullet.x += bullet.dx;
+		bullet.y += bullet.dy;
+
+		if (bullet.x > SCREEN_WIDTH) bullet.health = 0;
+
+		blit(player.texture, player.x, player.y);
+
+		if (bullet.health > 0)
+		{
+		    blit(bullet.texture, bullet.x, bullet.y);
+		}
 
 		presentScene();
 
