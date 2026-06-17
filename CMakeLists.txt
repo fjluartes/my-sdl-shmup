@@ -19,9 +19,7 @@ file(GLOB SOURCES
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 if(MINGW)
-
     target_link_options(${PROJECT_NAME} PRIVATE -mwindows)
-
     target_compile_options(${PROJECT_NAME} PRIVATE
         -Wall
         -Wextra
@@ -32,20 +30,16 @@ if(MINGW)
         -Wstrict-prototypes
         -Werror=maybe-uninitialized
     )
-
 elseif(MSVC)
-
     target_compile_options(${PROJECT_NAME} PRIVATE
         /W4
         /WX
         /Zi
     )
-
 endif()
 
 # ── Platform linking ──────────────────────────────────────────────────────────
 if(MINGW)
-
     set(SDL2_ROOT       "C:/sdl/SDL2-2.32.2/x86_64-w64-mingw32")
     set(SDL2_MIXER_ROOT "C:/sdl/SDL2_mixer-2.8.0/x86_64-w64-mingw32")
     set(SDL2_IMAGE_ROOT "C:/sdl/SDL2_image-2.8.12/x86_64-w64-mingw32")
@@ -66,9 +60,7 @@ if(MINGW)
         "${SDL2_MIXER_ROOT}/lib/libSDL2_mixer.dll.a"
         "${SDL2_TTF_ROOT}/lib/libSDL2_ttf.dll.a"
     )
-
     target_link_options(${PROJECT_NAME} PRIVATE -mwindows)
-
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${SDL2_ROOT}/bin/SDL2.dll"
@@ -77,7 +69,6 @@ if(MINGW)
             "${SDL2_TTF_ROOT}/bin/SDL2_ttf.dll"
             $<TARGET_FILE_DIR:${PROJECT_NAME}>
     )
-
 else()
     # Linux / macOS
     find_package(SDL2 REQUIRED)
