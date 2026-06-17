@@ -2,6 +2,8 @@
  * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
  */
 
+#include <SDL_image.h>
+
 #include "common.h"
 
 #include "draw.h"

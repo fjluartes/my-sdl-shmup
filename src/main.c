@@ -34,6 +34,11 @@ int main(int argc, char *argv[])
 
 		doInput();
 
+		if (app.up) player.y -= 8;
+		else if (app.down) player.y += 8;
+		else if (app.left) player.x -= 8;
+		else if (app.right) player.x += 8;
+
         blit(player.texture, player.x, player.y);
 
 		presentScene();
