@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
  */
+#include <SDL_image.h>
 
 #include "common.h"
 
@@ -22,7 +23,7 @@ void initSDL(void)
 		exit(1);
 	}
 
-	app.window = SDL_CreateWindow("Shooter 01", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags);
+	app.window = SDL_CreateWindow("SDL2 Shooter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags);
 
 	if (!app.window)
 	{
@@ -45,6 +46,8 @@ void initSDL(void)
 
 void cleanup(void)
 {
+    IMG_Quit();
+
 	SDL_DestroyRenderer(app.renderer);
 
 	SDL_DestroyWindow(app.window);

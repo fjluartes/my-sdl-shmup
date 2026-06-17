@@ -12,7 +12,7 @@ static void doKeyDown(SDL_KeyboardEvent *event)
 {
    if (event->repeat == 0 && event->keysym.scancode < MAX_KEYBOARD_KEYS)
    {
-       app.keyboard[event->keysym.scancode] = 0;
+       app.keyboard[event->keysym.scancode] = 1;
    }
 }
 
@@ -20,7 +20,7 @@ static void doKeyUp(SDL_KeyboardEvent *event)
 {
     if (event->repeat == 0 && event->keysym.scancode < MAX_KEYBOARD_KEYS)
     {
-        app.keyboard[event->keysym.scancode] = 1;
+        app.keyboard[event->keysym.scancode] = 0;
     }
 }
 

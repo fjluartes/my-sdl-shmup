@@ -58,7 +58,7 @@ static void capFrameRate(long *then, float *remainder)
 {
     long wait, frameTime;
     wait = 16 + *remainder;
-    *remainder -= SDL_GetTicks() - *then;
+    *remainder -= (int) *remainder;
     frameTime = SDL_GetTicks() - *then;
     wait -= frameTime;
     if (wait < 1) wait = 1;
