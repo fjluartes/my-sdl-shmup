@@ -28,7 +28,7 @@ if(MINGW)
         -Warray-bounds
         -g
         -Wstrict-prototypes
-        -Werror=maybe-uninitialized
+        -Werror=uninitialized
     )
 elseif(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE
@@ -69,8 +69,37 @@ if(MINGW)
             "${SDL2_TTF_ROOT}/bin/SDL2_ttf.dll"
             $<TARGET_FILE_DIR:${PROJECT_NAME}>
     )
+elseif(APPLE)
+    execute_process(
+        COMMAND brew --prefix
+        OUTPUT_VARIABLE BREW_PREFIX
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    set(ENV{PKG_CONFIG_PATH} "${BREW_PREFIX}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(SDL2 REQUIRED sdl2)
+
+    # SDL2_image/mixer/ttf have broken transitive deps on macOS (zlib, libpng, etc.)
+    # so we skip pkg-config for them and link dylibs directly
+    target_include_directories(${PROJECT_NAME} PRIVATE
+        "${BREW_PREFIX}/include/SDL2"
+    )
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        ${SDL2_LIBRARIES}
+        "${BREW_PREFIX}/lib/libSDL2_image.dylib"
+        "${BREW_PREFIX}/lib/libSDL2_mixer.dylib"
+        "${BREW_PREFIX}/lib/libSDL2_ttf.dylib"
+    )
+    target_link_directories(${PROJECT_NAME} PRIVATE
+        "${BREW_PREFIX}/lib"
+    )
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        -Wall -Wempty-body -Werror -Warray-bounds -g
+        $<$<COMPILE_LANGUAGE:C>:-Wstrict-prototypes -Werror=uninitialized>
+    )
 else()
-    # Linux / macOS
+    # Linux
     find_package(SDL2 REQUIRED)
 
     target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
@@ -78,7 +107,7 @@ else()
 
     target_compile_options(${PROJECT_NAME} PRIVATE
         -Wall -Wempty-body -Werror -Warray-bounds -g
-        $<$<COMPILE_LANGUAGE:C>:-Wstrict-prototypes -Werror=maybe-uninitialized>
+        $<$<COMPILE_LANGUAGE:C>:-Wstrict-prototypes -Werror=uninitialized>
     )
 endif()
 
