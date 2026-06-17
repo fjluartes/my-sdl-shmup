@@ -34,10 +34,23 @@ int main(int argc, char *argv[])
 
 		doInput();
 
-		if (app.up) player.y -= 8;
-		else if (app.down) player.y += 8;
-		else if (app.left) player.x -= 8;
-		else if (app.right) player.x += 8;
+		if (app.up) {
+            player.y -= 8;
+        }
+        else if (app.down) {
+            player.y += 8;
+        }
+		if (app.left) {
+            player.x -= 8;
+        }
+        else if (app.right) {
+            player.x += 8;
+        }
+		// Restrict player to screen bounds
+		if (player.y < 0) player.y = 0;
+		else if (player.y > SCREEN_HEIGHT - 8) player.y = SCREEN_HEIGHT - 8;
+		else if (player.x < 0) player.x = 0;
+		else if (player.x > SCREEN_WIDTH - 8) player.x = SCREEN_WIDTH - 8;
 
         blit(player.texture, player.x, player.y);
 
