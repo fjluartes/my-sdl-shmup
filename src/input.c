@@ -10,56 +10,18 @@ extern App app;
 
 static void doKeyDown(SDL_KeyboardEvent *event)
 {
-   if (event->repeat == 0)
+   if (event->repeat == 0 && event->keysym.scancode < MAX_KEYBOARD_KEYS)
    {
-       if (event->keysym.scancode == SDL_SCANCODE_UP)
-       {
-           app.up = 1;
-       }
-       else if (event->keysym.scancode == SDL_SCANCODE_DOWN)
-       {
-           app.down = 1;
-       }
-       else if (event->keysym.scancode == SDL_SCANCODE_LEFT)
-       {
-           app.left = 1;
-       }
-       else if (event->keysym.scancode == SDL_SCANCODE_RIGHT)
-       {
-           app.right = 1;
-       }
-       else if (event->keysym.scancode == SDL_SCANCODE_SPACE)
-       {
-           app.fire = 1;
-       }
+       app.keyboard[event->keysym.scancode] = 0;
    }
 }
 
 static void doKeyUp(SDL_KeyboardEvent *event)
 {
-   if (event->repeat == 0)
-   {
-       if (event->keysym.scancode == SDL_SCANCODE_UP)
-       {
-           app.up = 0;
-       }
-       else if (event->keysym.scancode == SDL_SCANCODE_DOWN)
-       {
-           app.down = 0;
-       }
-       else if (event->keysym.scancode == SDL_SCANCODE_LEFT)
-       {
-           app.left = 0;
-       }
-       else if (event->keysym.scancode == SDL_SCANCODE_RIGHT)
-       {
-           app.right = 0;
-       }
-       else if (event->keysym.scancode == SDL_SCANCODE_SPACE)
-       {
-           app.fire = 0;
-       }
-   }
+    if (event->repeat == 0 && event->keysym.scancode < MAX_KEYBOARD_KEYS)
+    {
+        app.keyboard[event->keysym.scancode] = 1;
+    }
 }
 
 void doInput(void)
