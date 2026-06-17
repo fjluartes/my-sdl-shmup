@@ -60,8 +60,8 @@ int main(int argc, char *argv[])
 
 		if (app.fire && bullet.health == 0)
 		{
-		    bullet.x = player.x;
-			bullet.y = player.y;
+		    bullet.x = player.x + 12;
+			bullet.y = player.y + 14;
 			bullet.dx = 20;
 			bullet.dy = 0;
 			bullet.health = 1;
