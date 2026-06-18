@@ -172,7 +172,7 @@ static void fireAlienBullet(Entity *e)
 
     bullet->dx *= ALIEN_BULLET_SPEED;
     bullet->dy *= ALIEN_BULLET_SPEED;
-    e->reload = (rand() % FPS & 2);
+    e->reload = (rand() % FPS * 2);
 }
 
 static void doFighters(void)
