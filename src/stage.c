@@ -167,7 +167,7 @@ static void fireAlienBullet(Entity *e)
     bullet->x += (e->w / 2) - (bullet->w / 2);
     bullet->y += (e->h / 2) - (bullet->h / 2);
 
-    calcSlope(player->x + (player->w / 2), player->y (player->h / 2),
+    calcSlope(player->x + (player->w / 2), player->y + (player->h / 2),
                            e->x, e->y, &bullet->dx, &bullet->dy);
 
     bullet->dx *= ALIEN_BULLET_SPEED;
