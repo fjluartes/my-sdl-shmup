@@ -22,6 +22,7 @@ static void drawFighters(void);
 static void drawBullets(void);
 static void spawnEnemies(void);
 static int bulletHitFighter(Entity *b);
+static int playerHitFighter(Entity *p);
 
 static Entity *player;
 static SDL_Texture *bulletTexture;
@@ -107,7 +108,8 @@ static void doFighters(void)
         e->x += e->dx;
         e->y += e->dy;
 
-        if (e != player && (e->x < -e->w || e->health == 0))
+        if (e != player && 
+            (e->x < -e->w || e->health == 0 || playerHitFighter(player)))
         {
             if (e == stage.fighterTail)
             {
@@ -125,7 +127,7 @@ static void doBullets(void)
 {
     Entity *b, *prev;
     prev = &stage.bulletHead;
-    for (b = stage.bulletHead.next; b!=NULL; b = b->next)
+    for (b = stage.bulletHead.next; b != NULL; b = b->next)
     {
         b->x += b->dx;
         b->y += b->dy;
@@ -149,7 +151,23 @@ static int bulletHitFighter(Entity *b)
             collision(b->x, b->y, b->w, b->h, e->x, e->y, e->w, e->h))
         {
             b->health = 0;
-            e->health -= 1;
+            e->health = 0;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Destroy enemy when hit by player
+static int playerHitFighter(Entity *p)
+{
+    Entity *e;
+    for (e = stage.fighterHead.next; e != NULL; e = e->next)
+    {
+        if (e->side != p->side && 
+            collision(p->x, p->y, p->w, p->h, e->x, e->y, e->w, e->h))
+        {
+            e->health = 0;
             return 1;
         }
     }
@@ -174,7 +192,7 @@ static void spawnEnemies(void)
         enemy->dx = -(2 + (rand() % 4));
 
         enemy->side = SIDE_ALIEN;
-        enemy->health = 2;
+        enemy->health = 1;
 
         enemySpawnTimer = 30 + (rand() % 60);
     }
