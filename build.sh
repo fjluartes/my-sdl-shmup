@@ -1,3 +1,3 @@
-cmake --preset default
-cmake --build --preset default
+cmake --preset unix-default
+cmake --build --preset unix-default
 ./build/shooter01
