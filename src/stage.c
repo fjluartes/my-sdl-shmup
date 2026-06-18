@@ -149,7 +149,7 @@ static int bulletHitFighter(Entity *b)
             collision(b->x, b->y, b->w, b->h, e->x, e->y, e->w, e->h))
         {
             b->health = 0;
-            e->health = 0;
+            e->health -= 1;
             return 1;
         }
     }
@@ -174,7 +174,7 @@ static void spawnEnemies(void)
         enemy->dx = -(2 + (rand() % 4));
 
         enemy->side = SIDE_ALIEN;
-        enemy->health = 1;
+        enemy->health = 2;
 
         enemySpawnTimer = 30 + (rand() % 60);
     }
