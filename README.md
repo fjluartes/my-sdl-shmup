@@ -6,6 +6,8 @@ From [Parallel Realities SDL2 tutorial](https://www.parallelrealities.co.uk/tuto
 
 ## TODO
 - [ ] 07 exercises
+- [ ] 08 Enemies fighting back
+- [ ] 08 exercises
 
 ## DONE
 - [x] 07 Shooting enemies
