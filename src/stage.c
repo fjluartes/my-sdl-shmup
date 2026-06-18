@@ -103,6 +103,19 @@ static void doFighters(void)
     {
         e->x += e->dx;
         e->y += e->dy;
+
+        // Enemies does not go above top and bottom of screen
+        if (e != player) {
+            if (e->y <= 0) {
+                e->y = 0;
+                e->dy = -e->dy;
+            }
+            else if (e->y > SCREEN_HEIGHT) {
+                e->y = SCREEN_HEIGHT;
+                e->dy = -e->dy;
+            }
+        }
+
         if (e != player && e->x < -e->w)
         {
             if (e == stage.fighterTail)
@@ -152,6 +165,7 @@ static void spawnEnemies(void)
         SDL_QueryTexture(enemy->texture, NULL, NULL, &enemy->w, &enemy->h);
 
         enemy->dx = -(2 + (rand() % 4));
+        enemy->dy = -(1 + (rand() % 3));
         enemySpawnTimer = 30 + (rand() % 60);
     }
 }
