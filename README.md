@@ -5,10 +5,12 @@ Shoot-em-up in SDL2
 From [Parallel Realities SDL2 tutorial](https://www.parallelrealities.co.uk/tutorials/)
 
 ## TODO
-- [ ] 08 Enemies fighting back
 - [ ] 08 exercises
+- [ ] 09 Effects and background graphics
+- [ ] 09 exercises
 
 ## DONE
+- [x] 08 Enemies fighting back
 - [x] 07 Shooting enemies
 - [x] 07 exercises
 - [x] 06 Enemies
