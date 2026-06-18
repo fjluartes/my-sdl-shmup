@@ -97,16 +97,14 @@ static void initPlayer(void)
 
 static void logic(void)
 {
-    doPlayer();
+    if (player != NULL) doPlayer();
     doEnemies();
     doFighters();
     doBullets();
     spawnEnemies();
     clipPlayer();
     if (player == NULL && --stageResetTimer <= 0) 
-    {
         resetStage();
-    }
 }
 
 static void doPlayer(void)
@@ -118,9 +116,7 @@ static void doPlayer(void)
     if (app.keyboard[SDL_SCANCODE_LEFT]) player->dx = -PLAYER_SPEED;
     if (app.keyboard[SDL_SCANCODE_RIGHT]) player->dx = PLAYER_SPEED;
     if (app.keyboard[SDL_SCANCODE_SPACE] && player->reload == 0)
-    {
         fireBullet();
-    }
 }
 
 static void fireBullet(void)
