@@ -28,6 +28,8 @@ static void clipPlayer(void);
 static void resetStage(void);
 static void drawBackground(void);
 static void doBackground(void);
+static void addDebris(Entity *e);
+static void doDebris(void);
 static void drawDebris(void);
 
 static Entity *player;
@@ -50,6 +52,7 @@ void initStage(void)
     memset(&stage, 0, sizeof(Stage));
     stage.fighterTail = &stage.fighterHead;
     stage.bulletTail = &stage.bulletHead;
+    stage.debrisTail = &stage.debrisHead;
 
     bulletTexture = loadTexture("gfx/playerBullet.png");
     enemyTexture = loadTexture("gfx/enemy.png");
@@ -81,11 +84,12 @@ static void resetStage(void)
     memset(&stage, 0, sizeof(Stage));
     stage.fighterTail = &stage.fighterHead;
     stage.bulletTail = &stage.bulletHead;
+    stage.debrisTail = &stage.debrisHead;
 
     initPlayer();
 
     enemySpawnTimer = 0;
-    stageResetTimer = FPS * 2;
+    stageResetTimer = FPS * 3;
 }
 
 static void initPlayer(void)
@@ -111,6 +115,7 @@ static void logic(void)
     doEnemies();
     doFighters();
     doBullets();
+    doDebris();
     spawnEnemies();
     clipPlayer();
     if (player == NULL && --stageResetTimer <= 0) 
@@ -246,13 +251,14 @@ static int bulletHitFighter(Entity *b)
             if (e == player && e->health > 0)
             {
                 b->health = 0;
-                e->health -= 1;
+                e->health -= 1; // playerHealth > enemyHealth
             }
             else 
             {
                 b->health = 0;
                 e->health = 0;
             }
+            addDebris(e);
             return 1;
         }
     }
@@ -292,6 +298,61 @@ static void clipPlayer(void)
         if (player->y < 0) player->y = 0;
         if (player->x > SCREEN_WIDTH / 2) player->x = SCREEN_WIDTH / 2;
         if (player->y > SCREEN_HEIGHT) player->y = SCREEN_HEIGHT;
+    }
+}
+
+static void doDebris(void)
+{
+    Debris *d, *prev;
+    prev = &stage.debrisHead;
+
+    for (d = stage.debrisHead.next; d != NULL; d = d->next)
+    {
+        d->x += d->dx;
+        d->y += d->dy;
+
+        d->dy += 0.5;
+
+        if (--d->life <= 0)
+        {
+            if (d == stage.debrisTail) stage.debrisTail = prev;
+            prev->next = d->next;
+            free(d);
+            d = prev;
+        }
+        prev = d;
+    }
+}
+
+static void addDebris(Entity *e)
+{
+    Debris *d;
+    int x, y, w, h;
+
+    w = e->w / 2;
+    h = e->h / 2;
+
+    for (y = 0; y <= h; y += h)
+    {
+        for (x = 0; x <= w; x += w)
+        {
+            d = malloc(sizeof(Debris));
+            memset(d, 0, sizeof(Debris));
+            stage.debrisTail->next = d;
+            stage.debrisTail = d;
+
+            d->x = e->x + e->w / 2;
+            d->y = e->y + e->h / 2;
+            d->dx = (rand() % 5) - (rand() % 5);
+            d->dy = (5 + (rand() % 12));
+            d->life = FPS * 2;
+            d->texture = e->texture;
+
+            d->rect.x = x;
+            d->rect.y = y;
+            d->rect.w = w;
+            d->rect.h = h;
+        }
     }
 }
 
