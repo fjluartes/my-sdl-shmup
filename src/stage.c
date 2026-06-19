@@ -27,7 +27,10 @@ static void fireAlienBullet(Entity *e);
 static void clipPlayer(void);
 static void resetStage(void);
 static void drawBackground(void);
+static void initStarfield(void);
+static void drawStarfield(void);
 static void doBackground(void);
+static void doStarfield(void);
 static void addDebris(Entity *e);
 static void doDebris(void);
 static void drawDebris(void);
@@ -42,7 +45,7 @@ static SDL_Texture *explosionTexture;
 static int enemySpawnTimer;
 static int stageResetTimer;
 static int backgroundX;
-// static Star stars[MAX_STARS];
+static Star stars[MAX_STARS];
 
 void initStage(void)
 {
@@ -97,6 +100,8 @@ static void resetStage(void)
 
     initPlayer();
 
+    initStarfield();
+
     enemySpawnTimer = 0;
     stageResetTimer = FPS * 3;
 }
@@ -117,9 +122,21 @@ static void initPlayer(void)
     player->side = SIDE_PLAYER;
 }
 
+static void initStarfield(void)
+{
+    int i;
+    for (i = 0; i < MAX_STARS; i++)
+    {
+        stars[i].x = rand() % SCREEN_WIDTH;
+        stars[i].y = rand() % SCREEN_HEIGHT;
+        stars[i].speed = 1 + rand() % 8;
+    }
+}
+
 static void logic(void)
 {
     doBackground();
+    doStarfield();
     if (player != NULL) doPlayer();
     doEnemies();
     doFighters();
@@ -136,6 +153,17 @@ static void doBackground(void)
     if (--backgroundX < -SCREEN_WIDTH)
     {
         backgroundX = 0;
+    }
+}
+
+static void doStarfield(void)
+{
+    int i;
+    for (i = 0; i < MAX_STARS; i++)
+    {
+        stars[i].x -= stars[i].speed;
+        if (stars[i].x < 0)
+            stars[i].x = SCREEN_WIDTH + stars[i].x;
     }
 }
 
@@ -368,6 +396,7 @@ static void addDebris(Entity *e)
 static void draw(void)
 {
     drawBackground();
+    drawStarfield();
     drawFighters();
     drawDebris();
     drawBullets();
@@ -388,6 +417,21 @@ static void drawBullets(void)
     for (b = stage.bulletHead.next; b!=NULL; b = b->next)
     {
         blit(b->texture, b->x, b->y);
+    }
+}
+
+static void drawStarfield(void)
+{
+    int i, c;
+    for (i = 0; i < MAX_STARS; i++)
+    {
+        c = 32 * stars[i].speed;
+        SDL_SetRenderDrawColor(app.renderer, c, c, c, 255);
+        SDL_RenderDrawLine(app.renderer, 
+                           stars[i].x, 
+                           stars[i].y, 
+                           stars[i].x + 3, 
+                           stars[i].y);
     }
 }
 
