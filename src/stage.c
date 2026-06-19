@@ -67,6 +67,8 @@ void initStage(void)
 static void resetStage(void)
 {
     Entity *e;
+    Debris *d;
+
     while (stage.fighterHead.next)
     {
         e = stage.fighterHead.next;
@@ -79,6 +81,13 @@ static void resetStage(void)
         e = stage.bulletHead.next;
         stage.bulletHead.next = e->next;
         free(e);
+    }
+
+    while (stage.debrisHead.next)
+    {
+        d = stage.debrisHead.next;
+        stage.debrisHead.next = d->next;
+        free(d);
     }
 
     memset(&stage, 0, sizeof(Stage));
