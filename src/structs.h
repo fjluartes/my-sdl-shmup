@@ -60,7 +60,7 @@ typedef struct
 {
     Entity fighterHead, *fighterTail;
     Entity bulletHead, *bulletTail;
-    Explosion explosionHead *explosionTail;
+    Explosion explosionHead, *explosionTail;
     Debris debrisHead, *debrisTail;
 } Stage;
 
