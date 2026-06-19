@@ -444,8 +444,8 @@ static void addDebris(Entity *e)
     Debris *d;
     int x, y, w, h;
 
-    w = e->w / 3;
-    h = e->h / 3;
+    w = e->w / 2;
+    h = e->h / 2;
 
     for (y = 0; y <= h; y += h)
     {
