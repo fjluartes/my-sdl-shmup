@@ -1,6 +1,8 @@
 /*
  * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
  */
+#include <SDL_image.h>
+
 #include "common.h"
 
 #include "draw.h"
@@ -36,4 +38,16 @@ void blit(SDL_Texture *texture, int x, int y)
     SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
     // change dest.w, dest.h to resize
     SDL_RenderCopy(app.renderer, texture, NULL, &dest);
+}
+
+void blitRect(SDL_Texture *texture, SDL_Rect *src, int x, int y)
+{
+    SDL_Rect dest;
+
+    dest.x = x;
+    dest.y = y;
+    dest.w = src->w;
+    dest.h = src->h;
+
+    SDL_RenderCopy(app.renderer, texture, src, &dest);
 }
