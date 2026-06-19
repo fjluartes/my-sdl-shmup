@@ -31,6 +31,9 @@ static void initStarfield(void);
 static void drawStarfield(void);
 static void doBackground(void);
 static void doStarfield(void);
+static void drawExplosions(void);
+static void doExplosions(void);
+static void addExplosions(int x, int y, int num);
 static void addDebris(Entity *e);
 static void doDebris(void);
 static void drawDebris(void);
@@ -55,6 +58,7 @@ void initStage(void)
     memset(&stage, 0, sizeof(Stage));
     stage.fighterTail = &stage.fighterHead;
     stage.bulletTail = &stage.bulletHead;
+    stage.explosionTail = &stage.explosionHead;
     stage.debrisTail = &stage.debrisHead;
 
     bulletTexture = loadTexture("gfx/playerBullet.png");
@@ -70,6 +74,7 @@ void initStage(void)
 static void resetStage(void)
 {
     Entity *e;
+    Explosion *ex;
     Debris *d;
 
     while (stage.fighterHead.next)
@@ -86,6 +91,13 @@ static void resetStage(void)
         free(e);
     }
 
+    while (stage.explosionHead.next)
+    {
+        ex = stage.explosionHead.next;
+        stage.explosionHead.next = ex->next;
+        free(ex);
+    }
+
     while (stage.debrisHead.next)
     {
         d = stage.debrisHead.next;
@@ -96,6 +108,7 @@ static void resetStage(void)
     memset(&stage, 0, sizeof(Stage));
     stage.fighterTail = &stage.fighterHead;
     stage.bulletTail = &stage.bulletHead;
+    stage.explosionTail = &stage.explosionHead;
     stage.debrisTail = &stage.debrisHead;
 
     initPlayer();
@@ -141,6 +154,7 @@ static void logic(void)
     doEnemies();
     doFighters();
     doBullets();
+    doExplosions();
     doDebris();
     spawnEnemies();
     clipPlayer();
@@ -295,6 +309,7 @@ static int bulletHitFighter(Entity *b)
                 b->health = 0;
                 e->health = 0;
             }
+            addExplosions(e->x, e->y, 32);
             addDebris(e);
             return 1;
         }
@@ -338,6 +353,26 @@ static void clipPlayer(void)
     }
 }
 
+static void doExplosions(void)
+{
+    Explosion *e, *prev;
+    prev = &stage.explosionHead;
+    for (e = stage.explosionHead.next; e != NULL; e = e->next)
+    {
+        e->x += e->dx;
+        e->y += e->dy;
+
+        if (--e->a <= 0)
+        {
+            if (e == stage.explosionTail) stage.explosionTail = prev;
+            prev->next = e->next;
+            free(e);
+            e = prev;
+        }
+        prev = e;
+    }
+}
+
 static void doDebris(void)
 {
     Debris *d, *prev;
@@ -358,6 +393,49 @@ static void doDebris(void)
             d = prev;
         }
         prev = d;
+    }
+}
+
+static void addExplosions(int x, int y, int num)
+{
+    Explosion *e;
+    int i;
+    for (i = 0; i < num; i++)
+    {
+        e = malloc(sizeof(Explosion));
+        memset(e, 0, sizeof(Explosion));
+        stage.explosionTail->next = e;
+        stage.explosionTail = e;
+
+        e->x = x + (rand() % 32) - (rand() % 32);
+        e->y = y + (rand() % 32) - (rand() % 32);
+        e->dx = (rand() % 10) - (rand() % 10);
+        e->dy = (rand() % 10) - (rand() % 10);
+
+        e->dx /= 10;
+        e->dy /= 10;
+
+        switch (rand() % 4)
+        {
+            case 0:
+                e->r = 255;
+                break;
+            case 1:
+                e->r = 255;
+                e->g = 128;
+                break;
+            case 2:
+                e->r = 255;
+                e->g = 255;
+                break;
+            default:
+                e->r = 255;
+                e->g = 255;
+                e->b = 255;
+                break;
+        }
+
+        e->a = rand() % FPS * 3;
     }
 }
 
@@ -399,6 +477,7 @@ static void draw(void)
     drawStarfield();
     drawFighters();
     drawDebris();
+    drawExplosions();
     drawBullets();
 }
 
@@ -460,3 +539,21 @@ static void drawDebris(void)
         blitRect(d->texture, &d->rect, d->x, d->y);
     }
 }
+
+static void drawExplosions(void)
+{
+    Explosion *e;
+    SDL_SetRenderDrawBlendMode(app.renderer, SDL_BLENDMODE_ADD);
+    SDL_SetTextureBlendMode(explosionTexture, SDL_BLENDMODE_ADD);
+
+    for (e = stage.explosionHead.next; e != NULL; e = e->next)
+    {
+        SDL_SetTextureColorMod(explosionTexture, e->r, e->g, e->b);
+        SDL_SetTextureAlphaMod(explosionTexture, e->a);
+
+        blit(explosionTexture, e->x, e->y);
+    }
+
+    SDL_SetRenderDrawBlendMode(app.renderer, SDL_BLENDMODE_NONE);
+}
+
