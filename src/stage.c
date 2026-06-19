@@ -28,6 +28,7 @@ static void clipPlayer(void);
 static void resetStage(void);
 static void drawBackground(void);
 static void doBackground(void);
+static void drawDebris(void);
 
 static Entity *player;
 static SDL_Texture *bulletTexture;
@@ -39,7 +40,7 @@ static SDL_Texture *explosionTexture;
 static int enemySpawnTimer;
 static int stageResetTimer;
 static int backgroundX;
-static Star stars[MAX_STARS];
+// static Star stars[MAX_STARS];
 
 void initStage(void)
 {
@@ -328,7 +329,7 @@ static void drawBackground(void)
     for (x = backgroundX; x < SCREEN_WIDTH; x += SCREEN_WIDTH)
     {
         dest.x = x;
-        dest.y = y;
+        dest.y = 0;
         dest.w = SCREEN_WIDTH;
         dest.h = SCREEN_HEIGHT;
 
@@ -342,6 +343,6 @@ static void drawDebris(void)
 
     for (d = stage.debrisHead.next; d != NULL; d = d->next)
     {
-        blitRect(d->texture, *d->rect, d->x, d->y);
+        blitRect(d->texture, &d->rect, d->x, d->y);
     }
 }
