@@ -26,14 +26,20 @@ static void doEnemies(void);
 static void fireAlienBullet(Entity *e);
 static void clipPlayer(void);
 static void resetStage(void);
+static void drawBackground(void);
+static void doBackground(void);
 
 static Entity *player;
 static SDL_Texture *bulletTexture;
 static SDL_Texture *enemyTexture;
 static SDL_Texture *alienBulletTexture;
 static SDL_Texture *playerTexture;
+static SDL_Texture *background;
+static SDL_Texture *explosionTexture;
 static int enemySpawnTimer;
 static int stageResetTimer;
+static int backgroundX;
+static Star stars[MAX_STARS];
 
 void initStage(void)
 {
@@ -48,6 +54,8 @@ void initStage(void)
     enemyTexture = loadTexture("gfx/enemy.png");
     alienBulletTexture = loadTexture("gfx/alienBullet.png");
     playerTexture = loadTexture("gfx/player.png");
+    background = loadTexture("gfx/background.png");
+    explosionTexture = loadTexture("gfx/explosion.png");
 
     resetStage();
 }
@@ -97,6 +105,7 @@ static void initPlayer(void)
 
 static void logic(void)
 {
+    doBackground();
     if (player != NULL) doPlayer();
     doEnemies();
     doFighters();
@@ -105,6 +114,14 @@ static void logic(void)
     clipPlayer();
     if (player == NULL && --stageResetTimer <= 0) 
         resetStage();
+}
+
+static void doBackground(void)
+{
+    if (--backgroundX < -SCREEN_WIDTH)
+    {
+        backgroundX = 0;
+    }
 }
 
 static void doPlayer(void)
@@ -279,7 +296,9 @@ static void clipPlayer(void)
 
 static void draw(void)
 {
+    drawBackground();
     drawFighters();
+    drawDebris();
     drawBullets();
 }
 
@@ -298,5 +317,31 @@ static void drawBullets(void)
     for (b = stage.bulletHead.next; b!=NULL; b = b->next)
     {
         blit(b->texture, b->x, b->y);
+    }
+}
+
+static void drawBackground(void)
+{
+    SDL_Rect dest;
+    int x;
+
+    for (x = backgroundX; x < SCREEN_WIDTH; x += SCREEN_WIDTH)
+    {
+        dest.x = x;
+        dest.y = y;
+        dest.w = SCREEN_WIDTH;
+        dest.h = SCREEN_HEIGHT;
+
+        SDL_RenderCopy(app.renderer, background, NULL, &dest);
+    }
+}
+
+static void drawDebris(void)
+{
+    Debris *d;
+
+    for (d = stage.debrisHead.next; d != NULL; d = d->next)
+    {
+        blitRect(d->texture, *d->rect, d->x, d->y);
     }
 }

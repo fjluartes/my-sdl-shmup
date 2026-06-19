@@ -8,6 +8,8 @@ From [Parallel Realities SDL2 tutorial](https://www.parallelrealities.co.uk/tuto
 - [ ] 09 exercises
 - [ ] 10 Sound and music
 - [ ] 10 exercises
+- [ ] 11 Bitmap fonts and scoring
+- [ ] 11 exercises
 
 ## DONE
 - [x] 09 Effects and background graphics
