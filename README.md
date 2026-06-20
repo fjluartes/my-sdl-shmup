@@ -5,7 +5,6 @@ Shoot-em-up in SDL2
 From [Parallel Realities SDL2 tutorial](https://www.parallelrealities.co.uk/tutorials/)
 
 ## TODO
-- [ ] 10 exercises
 - [ ] 11 Bitmap fonts and scoring
 - [ ] 11 exercises
 - [ ] 12 Score pods
@@ -13,6 +12,7 @@ From [Parallel Realities SDL2 tutorial](https://www.parallelrealities.co.uk/tuto
 
 ## DONE
 - [x] 10 Sound and music
+- [x] 10 exercises
 - [x] 09 Effects and background graphics
 - [x] 09 exercises
 - [x] 08 Enemies fighting back

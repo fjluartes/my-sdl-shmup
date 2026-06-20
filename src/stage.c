@@ -115,6 +115,8 @@ static void resetStage(void)
     stage.explosionTail = &stage.explosionHead;
     stage.debrisTail = &stage.debrisHead;
 
+    stage.score = 0;
+
     initPlayer();
 
     initStarfield();
