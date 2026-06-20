@@ -37,4 +37,4 @@ enum
     SND_PLAYER_DIE,
     SND_ALIEN_DIE,
     SND_MAX
-}
+};

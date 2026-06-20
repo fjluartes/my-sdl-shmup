@@ -2,6 +2,7 @@
  * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
  */
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 
 #include "common.h"
 
@@ -23,6 +24,14 @@ void initSDL(void)
 		exit(1);
 	}
 
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
+	{
+		printf("Couldn't initialize SDL Mixer\n");
+		exit(1);
+	}
+
+	Mix_AllocateChannels(MAX_SND_CHANNELS);
+
 	app.window = SDL_CreateWindow("SDL2 Shooter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags);
 
 	if (!app.window)
@@ -42,6 +51,8 @@ void initSDL(void)
 	}
 
     IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
+
+    SDL_ShowCursor(0);
 }
 
 void cleanup(void)
