@@ -8,7 +8,7 @@
 #define SCREEN_WIDTH  1280
 #define SCREEN_HEIGHT 720
 
-#define MAX_LINE_LENGTH 1024;
+#define MAX_LINE_LENGTH 1024
 
 #define FPS 60
 

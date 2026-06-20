@@ -11,6 +11,7 @@
 #include "main.h"
 #include "sound.h"
 #include "stage.h"
+#include "text.h"
 
 App app;
 Stage stage;

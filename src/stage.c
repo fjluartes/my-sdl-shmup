@@ -7,6 +7,7 @@
 #include "draw.h"
 #include "sound.h"
 #include "stage.h"
+#include "text.h"
 #include "util.h"
 
 extern App app;
@@ -38,6 +39,7 @@ static void addExplosions(int x, int y, int num);
 static void addDebris(Entity *e);
 static void doDebris(void);
 static void drawDebris(void);
+static void drawHud(void);
 
 static Entity *player;
 static SDL_Texture *bulletTexture;
@@ -50,6 +52,7 @@ static int enemySpawnTimer;
 static int stageResetTimer;
 static int backgroundX;
 static Star stars[MAX_STARS];
+static int highscore;
 
 void initStage(void)
 {
@@ -324,9 +327,16 @@ static int bulletHitFighter(Entity *b)
             addExplosions(e->x, e->y, 32);
             addDebris(e);
 
-            if (e == player) playSound(SND_PLAYER_DIE, CH_PLAYER);
-            else playSound(SND_ALIEN_DIE, CH_ANY);
-
+            if (e == player)
+            {
+                playSound(SND_PLAYER_DIE, CH_PLAYER);  
+            } 
+            else 
+            {
+                playSound(SND_ALIEN_DIE, CH_ANY);
+                stage.score++;
+                highscore = MAX(stage.score, highscore);
+            }
             return 1;
         }
     }
@@ -495,6 +505,7 @@ static void draw(void)
     drawDebris();
     drawExplosions();
     drawBullets();
+    drawHud();
 }
 
 static void drawFighters(void)
@@ -573,3 +584,12 @@ static void drawExplosions(void)
     SDL_SetRenderDrawBlendMode(app.renderer, SDL_BLENDMODE_NONE);
 }
 
+static void drawHud(void)
+{
+    drawText(10, 10, 255, 255, 255, "SCORE: %03d", stage.score);
+
+    if (stage.score > 0 && stage.score == highscore)
+        drawText(1020, 10, 0, 255, 0, "HIGHSCORE: %03d", highscore);
+    else
+        drawText(1020, 10, 255, 255, 255, "HIGHSCORE: %03d", highscore);
+}
