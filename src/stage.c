@@ -586,10 +586,10 @@ static void drawExplosions(void)
 
 static void drawHud(void)
 {
-    int time = 0;
+    int minute = 0;
     drawText(10, 10, 255, 255, 255, "SCORE: %03d", stage.score);
 
-    drawText(550, 10, 255, 255, 255, "TIME: %02d", time);
+    drawText(550, 10, 255, 255, 255, "TIME: %02d", minute);
 
     if (stage.score > 0 && stage.score == highscore)
         drawText(1020, 10, 0, 255, 0, "HIGHSCORE: %03d", highscore);
