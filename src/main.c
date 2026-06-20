@@ -10,6 +10,7 @@
 #include "init.h"
 #include "input.h"
 #include "main.h"
+#include "sound.h"
 #include "stage.h"
 
 App app;
@@ -29,6 +30,8 @@ int main(int argc, char *argv[])
 	initSDL();
 
 	atexit(cleanup);
+
+	initSounds();
 
 	initStage();
 

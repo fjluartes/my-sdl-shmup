@@ -69,6 +69,9 @@ void initStage(void)
     background = loadTexture("gfx/background.png");
     explosionTexture = loadTexture("gfx/explosion.png");
 
+    loadMusic("music/Mercury.ogg");
+    playMusic(1);
+
     resetStage();
 }
 
@@ -191,7 +194,10 @@ static void doPlayer(void)
     if (app.keyboard[SDL_SCANCODE_LEFT]) player->dx = -PLAYER_SPEED;
     if (app.keyboard[SDL_SCANCODE_RIGHT]) player->dx = PLAYER_SPEED;
     if (app.keyboard[SDL_SCANCODE_SPACE] && player->reload == 0)
+    {
         fireBullet();
+        playSound(SND_PLAYER_FIRE, CH_PLAYER);
+    }
 }
 
 static void fireBullet(void)
@@ -220,7 +226,10 @@ static void doEnemies(void)
     for (e = stage.fighterHead.next; e != NULL; e = e->next)
     {
         if (e != player && player != NULL && --e->reload <= 0)
+        {
             fireAlienBullet(e);
+            playSound(SND_ALIEN_FIRE, CH_ALIEN_FIRE);
+        }
     }
 }
 
@@ -312,6 +321,10 @@ static int bulletHitFighter(Entity *b)
             }
             addExplosions(e->x, e->y, 32);
             addDebris(e);
+
+            if (e == player) playSound(SND_PLAYER_DIE, CH_PLAYER);
+            else playSound(SND_ALIEN_DIE, CH_ANY);
+
             return 1;
         }
     }
