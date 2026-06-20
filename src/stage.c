@@ -445,8 +445,8 @@ static void addDebris(Entity *e)
     Debris *d;
     int x, y, w, h;
 
-    w = e->w / 3;
-    h = e->h / 3;
+    w = e->w / 2;
+    h = e->h / 2;
 
     for (y = 0; y <= h; y += h)
     {
@@ -457,8 +457,8 @@ static void addDebris(Entity *e)
             stage.debrisTail->next = d;
             stage.debrisTail = d;
 
-            d->x = e->x + x;
-            d->y = e->y + y;
+            d->x = e->x + e->w / 2;
+            d->y = e->y + e->h / 2;
             d->dx = (rand() % 5) - (rand() % 5);
             d->dy = (5 + (rand() % 12));
             d->life = FPS * 2;
