@@ -8,6 +8,8 @@ From [Parallel Realities SDL2 tutorial](https://www.parallelrealities.co.uk/tuto
 - [ ] 10 exercises
 - [ ] 11 Bitmap fonts and scoring
 - [ ] 11 exercises
+- [ ] 12 Score pods
+- [ ] 12 exercises
 
 ## DONE
 - [x] 10 Sound and music
