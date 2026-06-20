@@ -57,6 +57,8 @@ void initSDL(void)
 
 void cleanup(void)
 {
+	Mix_Quit();
+	
     IMG_Quit();
 
 	SDL_DestroyRenderer(app.renderer);
