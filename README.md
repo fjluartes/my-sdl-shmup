@@ -5,14 +5,14 @@ Shoot-em-up in SDL2
 From [Parallel Realities SDL2 tutorial](https://www.parallelrealities.co.uk/tutorials/)
 
 ## TODO
-- [ ] 12 Score pods
 - [ ] 12 exercises
 - [ ] 13 High score 1
 - [ ] 13 exercises
 
 ## DONE
-- [ ] 11 Bitmap fonts and scoring
-- [ ] 11 exercises
+- [x] 12 Score pods
+- [x] 11 Bitmap fonts and scoring
+- [x] 11 exercises
 - [x] 10 Sound and music
 - [x] 10 exercises
 - [x] 09 Effects and background graphics
