@@ -467,6 +467,9 @@ static void doPointsPods(void)
             e->dy = -e->dy;
         }
 
+        e->x += e->dx;
+        e->y += e->dy;
+
         if (player != NULL && 
             collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w, player->h))
         {
@@ -486,8 +489,8 @@ static void doPointsPods(void)
             free(e);
             e = prev;
         }
+        prev = e;
     }
-    prev = e;
 }
 
 static void addExplosions(int x, int y, int num)
