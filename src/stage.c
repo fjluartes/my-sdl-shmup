@@ -347,9 +347,8 @@ static int bulletHitFighter(Entity *b)
             } 
             else 
             {
+                addPointsPod(e->x + e->w / 2, e->y + e->h / 2);
                 playSound(SND_ALIEN_DIE, CH_ANY);
-                stage.score++;
-                highscore = MAX(stage.score, highscore);
             }
             return 1;
         }
@@ -438,7 +437,57 @@ static void doDebris(void)
 
 static void doPointsPods(void)
 {
+    Entity *e, *prev;
 
+    prev = &stage.pointsHead;
+
+    for (e = stage.pointsHead.next; e != NULL; e = e->next)
+    {
+        if (e->x < 0)
+        {
+            e->x = 0;
+            e->dx = -e->dx;
+        }
+
+        if (e->x + e->w > SCREEN_WIDTH)
+        {
+            e->x = SCREEN_WIDTH - e->w;
+            e->dx = -e-dx;
+        }
+
+        if (e->y < 0)
+        {
+            e->y = 0;
+            e->dy = -e->dy;
+        }
+
+        if (e->y + e->h > SCREEN_HEIGHT)
+        {
+            e->y = SCREEN_HEIGHT - e->h;
+            e->dy = -e-dy;
+        }
+
+        if (player != NULL && 
+            collision(e->x, e->y, e->w, e->h, player->x, player->y, player->w, player->h))
+        {
+            e->health = 0;
+            stage.score++;
+            highscore = MAX(stage.score, highscore);
+            playSound(SND_POINTS, CH_POINTS);
+        }
+
+        if (--e->health <= 0)
+        {
+            if (e == stage.pointsTail)
+            {
+                stage.pointsTail = prev;
+            }
+            prev->next = e->next;
+            free(e);
+            e = prev;
+        }
+    }
+    prev = e;
 }
 
 static void addExplosions(int x, int y, int num)
