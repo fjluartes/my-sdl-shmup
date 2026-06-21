@@ -40,6 +40,9 @@ static void addDebris(Entity *e);
 static void doDebris(void);
 static void drawDebris(void);
 static void drawHud(void);
+static void doPointsPods(void);
+static void drawPointsPods(void);
+static void addPointsPod(int x, int y);
 
 static Entity *player;
 static SDL_Texture *bulletTexture;
@@ -73,7 +76,7 @@ void initStage(void)
     playerTexture = loadTexture("gfx/player.png");
     background = loadTexture("gfx/background.png");
     explosionTexture = loadTexture("gfx/explosion.png");
-    poinsTextgur = loadTexture("gfx/points.png");
+    pointsTexture = loadTexture("gfx/points.png");
 
     loadMusic("music/Mercury.ogg");
     playMusic(1);
@@ -115,11 +118,18 @@ static void resetStage(void)
         free(d);
     }
 
-    memset(&stage, 0, sizeof(Stage));
+    while (stage.pointsHead.next)
+    {
+        e = stage.pointsHead.next;
+        stage.pointsHead.next = e->next;
+        free(e);
+    }
+
     stage.fighterTail = &stage.fighterHead;
     stage.bulletTail = &stage.bulletHead;
     stage.explosionTail = &stage.explosionHead;
     stage.debrisTail = &stage.debrisHead;
+    stage.pointsTail = &stage.pointsHead;
 
     stage.score = 0;
 
@@ -168,6 +178,7 @@ static void logic(void)
     doBullets();
     doExplosions();
     doDebris();
+    doPointsPods();
     spawnEnemies();
     clipPlayer();
     if (player == NULL && --stageResetTimer <= 0) 
@@ -425,6 +436,11 @@ static void doDebris(void)
     }
 }
 
+static void doPointsPods(void)
+{
+
+}
+
 static void addExplosions(int x, int y, int num)
 {
     Explosion *e;
@@ -500,15 +516,47 @@ static void addDebris(Entity *e)
     }
 }
 
+static void addPointsPod(int x, int y)
+{
+    Entity *e;
+
+    e = malloc(sizeof(Entity));
+    memset(e, 0, sizeof(Entity));
+    stage.pointsTail->next = e;
+    stage.pointsTail = e;
+
+    e->x = x;
+    e->y = y;
+    e->dx = -(rand() % 5);
+    e->dy = (rand() % 5) - (rand() % 5);
+    e->health = FPS * 10;
+    e->texture = pointsTexture;
+
+    SDL_QueryTexture(e->texture, NULL, NULL, &e->w, &e->h);
+
+    e->x -= e->w / 2;
+    e->y -= e->h / 2;
+}
+
 static void draw(void)
 {
     drawBackground();
     drawStarfield();
+    drawPointsPods();
     drawFighters();
     drawDebris();
     drawExplosions();
     drawBullets();
     drawHud();
+}
+
+static void drawPointsPods(void)
+{
+    Entity *e;
+    for (e = stage.pointsHead.next; e != NULL; e = e->next)
+    {
+        blit(e->texture, e->x, e->y);
+    }
 }
 
 static void drawFighters(void)
@@ -592,7 +640,7 @@ static void drawHud(void)
     int minute = 0;
     drawText(10, 10, 255, 255, 255, "SCORE: %03d", stage.score);
 
-    drawText(550, 10, 255, 255, 255, "TIME: %02d", minute);
+    // drawText(550, 10, 255, 255, 255, "TIME: %02d", minute);
 
     if (stage.score > 0 && stage.score == highscore)
         drawText(1020, 10, 0, 255, 0, "HIGHSCORE: %03d", highscore);
