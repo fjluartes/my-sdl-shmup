@@ -452,7 +452,7 @@ static void doPointsPods(void)
         if (e->x + e->w > SCREEN_WIDTH)
         {
             e->x = SCREEN_WIDTH - e->w;
-            e->dx = -e-dx;
+            e->dx = -e->dx;
         }
 
         if (e->y < 0)
@@ -464,7 +464,7 @@ static void doPointsPods(void)
         if (e->y + e->h > SCREEN_HEIGHT)
         {
             e->y = SCREEN_HEIGHT - e->h;
-            e->dy = -e-dy;
+            e->dy = -e->dy;
         }
 
         if (player != NULL && 
@@ -686,10 +686,7 @@ static void drawExplosions(void)
 
 static void drawHud(void)
 {
-    int minute = 0;
     drawText(10, 10, 255, 255, 255, "SCORE: %03d", stage.score);
-
-    // drawText(550, 10, 255, 255, 255, "TIME: %02d", minute);
 
     if (stage.score > 0 && stage.score == highscore)
         drawText(1020, 10, 0, 255, 0, "HIGHSCORE: %03d", highscore);
