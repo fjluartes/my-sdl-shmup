@@ -48,6 +48,7 @@ static SDL_Texture *alienBulletTexture;
 static SDL_Texture *playerTexture;
 static SDL_Texture *background;
 static SDL_Texture *explosionTexture;
+static SDL_Texture *pointsTexture;
 static int enemySpawnTimer;
 static int stageResetTimer;
 static int backgroundX;
@@ -64,6 +65,7 @@ void initStage(void)
     stage.bulletTail = &stage.bulletHead;
     stage.explosionTail = &stage.explosionHead;
     stage.debrisTail = &stage.debrisHead;
+    stage.pointsTail = &stage.pointsHead;
 
     bulletTexture = loadTexture("gfx/playerBullet.png");
     enemyTexture = loadTexture("gfx/enemy.png");
@@ -71,6 +73,7 @@ void initStage(void)
     playerTexture = loadTexture("gfx/player.png");
     background = loadTexture("gfx/background.png");
     explosionTexture = loadTexture("gfx/explosion.png");
+    poinsTextgur = loadTexture("gfx/points.png");
 
     loadMusic("music/Mercury.ogg");
     playMusic(1);
