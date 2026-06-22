@@ -73,9 +73,6 @@ void initStage(void)
 
     memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
 
-    loadMusic("music/Mercury.ogg");
-    playMusic(1);
-
     resetStage();
 
     stage.score = 0;
