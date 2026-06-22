@@ -71,14 +71,14 @@ static void doNameInput(void)
     int i, n;
     char c;
 
-    n = strlen(nweHighscore->name);
+    n = strlen(newHighscore->name);
 
     for (i = 0; i < strlen(app.inputText); i++)
     {
-        c = touppr(app.inputText[i]);
+        c = toupper(app.inputText[i]);
         if (n < MAX_SCORE_NAME_LENGTH - 1 && c >= ' ' && c <= 'Z')
         {
-            newHighscorre->name[n++] = c;
+            newHighscore->name[n++] = c;
         }
     }
 
@@ -146,7 +146,7 @@ static void drawHighscores(void)
     int i, y, r, g, b;
     y = 150;
 
-    drawText(SCREN_WIDTH / 2, 70, 255, 255, 255, TEXT_CENTER, "HIGHSCORES");
+    drawText(SCREEN_WIDTH / 2, 70, 255, 255, 255, TEXT_CENTER, "HIGHSCORES");
 
     for (i = 0; i < NUM_HIGHSCORES; i++)
     {
@@ -163,7 +163,8 @@ static void drawHighscores(void)
 
         y += 50;
     }
-    drawText(SCREEN_WIDTH / 2, 600, 255, 255, 255, "PRESS FIRE TO PLAY!");
+    drawText(SCREEN_WIDTH / 2, 600, 255, 255, 255, 
+        TEXT_CENTER, "PRESS FIRE TO PLAY!");
 }
 
 void addHighscore(int score)
