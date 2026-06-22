@@ -622,10 +622,16 @@ static void drawExplosions(void)
 
 static void drawHud(void)
 {
-    drawText(10, 10, 255, 255, 255, "SCORE: %03d", stage.score);
+    drawText(10, 10, 255, 255, 255, TEXT_LEFT, "SCORE: %03d", stage.score);
 
     if (stage.score < highscores.highscore[0].score)
-        drawText(1020, 10, 0, 255, 0, "HIGHSCORE: %03d", highscores.highscore[0].score);
+    {
+        drawText(SCREEN_WIDTH - 10, 10, 0, 255, 0, 
+            TEXT_RIGHT, "HIGHSCORE: %03d", highscores.highscore[0].score);
+    }
     else
-        drawText(1020, 10, 255, 255, 255, "HIGHSCORE: %03d", stage.score);
+    {
+        drawText(SCREEN_WIDTH - 10, 10, 255, 255, 255, 
+            TEXT_RIGHT, "HIGHSCORE: %03d", stage.score);
+    }
 }

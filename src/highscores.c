@@ -73,7 +73,7 @@ static void doNameInput(void)
 
     n = strlen(newHighscore->name);
 
-    for (i = 0; i < strlen(app.inputText); i++)
+    for (i = 0; i < (int)strlen(app.inputText); i++)
     {
         c = toupper(app.inputText[i]);
         if (n < MAX_SCORE_NAME_LENGTH - 1 && c >= ' ' && c <= 'Z')
@@ -123,7 +123,7 @@ static void drawNameInput(void)
     drawText(SCREEN_WIDTH / 2, 120, 255, 255, 255, 
         TEXT_CENTER, "ENTER YOUR NAME BELOW:");
     drawText(SCREEN_WIDTH / 2, 250, 255, 255, 255, 
-        TEXT_CENTER, newHighscorer->name);
+        TEXT_CENTER, newHighscore->name);
 
     if (cursorBlink < FPS / 2)
     {
@@ -158,7 +158,7 @@ static void drawHighscores(void)
         {
             b = 0;
         }
-        drawText(SCREN_WIDTH / 2, y, r, g, b, TEXT_CENTER, "#%d. %-15s ...... %03d", 
+        drawText(SCREEN_WIDTH / 2, y, r, g, b, TEXT_CENTER, "#%d. %-15s ...... %03d", 
                 (i + 1), highscores.highscore[i].name, highscores.highscore[i].score);
 
         y += 50;
