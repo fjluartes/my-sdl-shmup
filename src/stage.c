@@ -74,14 +74,18 @@ void initStage(void)
     enemyTexture = loadTexture("gfx/enemy.png");
     alienBulletTexture = loadTexture("gfx/alienBullet.png");
     playerTexture = loadTexture("gfx/player.png");
-    background = loadTexture("gfx/background.png");
     explosionTexture = loadTexture("gfx/explosion.png");
     pointsTexture = loadTexture("gfx/points.png");
+
+    memset(app.keyboard, 0, sizeof(int) * MAX_KEYBOARD_KEYS);
 
     loadMusic("music/Mercury.ogg");
     playMusic(1);
 
     resetStage();
+
+    enemySpawnTimer = 0;
+    stageResetTimer = FPS * 3;
 }
 
 static void resetStage(void)
@@ -134,11 +138,6 @@ static void resetStage(void)
     stage.score = 0;
 
     initPlayer();
-
-    initStarfield();
-
-    enemySpawnTimer = 0;
-    stageResetTimer = FPS * 3;
 }
 
 static void initPlayer(void)

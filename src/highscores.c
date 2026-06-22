@@ -3,6 +3,11 @@
  */
 #include "common.h"
 
+#include "background.h"
+#include "highscores.h"
+#include "stage.h"
+#include "text.h"
+
 
 void initHighscoreTable(void)
 {
@@ -16,5 +21,5 @@ void initHighscores(void)
 
 void addHighscore(int score)
 {
-    
+
 }
