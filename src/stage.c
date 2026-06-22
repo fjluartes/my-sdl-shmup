@@ -182,7 +182,9 @@ static void logic(void)
     spawnEnemies();
     clipPlayer();
     if (player == NULL && --stageResetTimer <= 0) 
+    {
         resetStage();
+    }
 }
 
 static void doBackground(void)
