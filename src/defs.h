@@ -11,6 +11,7 @@
 #define SCREEN_WIDTH  1280
 #define SCREEN_HEIGHT 720
 
+#define MAX_SCORE_NAME_LENGTH 16
 #define MAX_NAME_LENGTH 32
 #define MAX_LINE_LENGTH 1024
 
@@ -31,6 +32,9 @@
 
 #define NUM_HIGHSCORES 8
 
+#define GLYPH_HEIGHT 28
+#define GLYPH_WIDTH 18
+
 enum
 {
     CH_ANY = -1,
@@ -47,4 +51,11 @@ enum
     SND_ALIEN_DIE,
     SND_POINTS,
     SND_MAX
+};
+
+enum
+{
+    TEXT_LEFT;
+    TEXT_CENTER;
+    TEXT_RIGHT;
 };
