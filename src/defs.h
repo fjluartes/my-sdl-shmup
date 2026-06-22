@@ -55,7 +55,7 @@ enum
 
 enum
 {
-    TEXT_LEFT;
-    TEXT_CENTER;
-    TEXT_RIGHT;
+    TEXT_LEFT,
+    TEXT_CENTER,
+    TEXT_RIGHT
 };
