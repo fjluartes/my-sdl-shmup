@@ -6,14 +6,13 @@
 #include "common.h"
 
 #include "draw.h"
+#include "highscores.h"
 #include "init.h"
 #include "input.h"
 #include "main.h"
-#include "sound.h"
-#include "stage.h"
-#include "text.h"
 
 App app;
+Highscores highscores;
 Stage stage;
 
 static void capFrameRate(long *then, float *remainder);
@@ -26,16 +25,15 @@ int main(int argc, char *argv[])
     long then;
     float remainder;
 	memset(&app, 0, sizeof(App));
+	app.textureTail = &app.textureHead;
 
 	initSDL();
 
 	atexit(cleanup);
 
-	initSounds();
+	initGame();
 
-	initFonts();
-
-	initStage();
+	initHighscores();
 
 	then = SDL_GetTicks();
 
@@ -62,12 +60,20 @@ int main(int argc, char *argv[])
 static void capFrameRate(long *then, float *remainder)
 {
     long wait, frameTime;
+
     wait = 16 + *remainder;
+
     *remainder -= (int) *remainder;
+
     frameTime = SDL_GetTicks() - *then;
+
     wait -= frameTime;
+
     if (wait < 1) wait = 1;
+
     SDL_Delay(wait);
+
     *remainder += 0.667;
+    
     *then = SDL_GetTicks();
 }

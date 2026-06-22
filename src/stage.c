@@ -4,13 +4,16 @@
  */
 #include "common.h"
 
+#include "background.h"
 #include "draw.h"
+#include "highscores.h"
 #include "sound.h"
 #include "stage.h"
 #include "text.h"
 #include "util.h"
 
 extern App app;
+extern Highscores highscores;
 extern Stage stage;
 
 static void logic(void);
@@ -28,11 +31,6 @@ static void doEnemies(void);
 static void fireAlienBullet(Entity *e);
 static void clipPlayer(void);
 static void resetStage(void);
-static void drawBackground(void);
-static void initStarfield(void);
-static void drawStarfield(void);
-static void doBackground(void);
-static void doStarfield(void);
 static void drawExplosions(void);
 static void doExplosions(void);
 static void addExplosions(int x, int y, int num);
@@ -49,14 +47,10 @@ static SDL_Texture *bulletTexture;
 static SDL_Texture *enemyTexture;
 static SDL_Texture *alienBulletTexture;
 static SDL_Texture *playerTexture;
-static SDL_Texture *background;
 static SDL_Texture *explosionTexture;
 static SDL_Texture *pointsTexture;
 static int enemySpawnTimer;
 static int stageResetTimer;
-static int backgroundX;
-static Star stars[MAX_STARS];
-static int highscore;
 
 void initStage(void)
 {
@@ -83,6 +77,10 @@ void initStage(void)
     playMusic(1);
 
     resetStage();
+
+    stage.score = 0;
+
+    initPlayer();
 
     enemySpawnTimer = 0;
     stageResetTimer = FPS * 3;
@@ -134,10 +132,6 @@ static void resetStage(void)
     stage.explosionTail = &stage.explosionHead;
     stage.debrisTail = &stage.debrisHead;
     stage.pointsTail = &stage.pointsHead;
-
-    stage.score = 0;
-
-    initPlayer();
 }
 
 static void initPlayer(void)
@@ -156,22 +150,11 @@ static void initPlayer(void)
     player->side = SIDE_PLAYER;
 }
 
-static void initStarfield(void)
-{
-    int i;
-    for (i = 0; i < MAX_STARS; i++)
-    {
-        stars[i].x = rand() % SCREEN_WIDTH;
-        stars[i].y = rand() % SCREEN_HEIGHT;
-        stars[i].speed = 1 + rand() % 8;
-    }
-}
-
 static void logic(void)
 {
     doBackground();
     doStarfield();
-    if (player != NULL) doPlayer();
+    doPlayer();
     doEnemies();
     doFighters();
     doBullets();
@@ -182,41 +165,25 @@ static void logic(void)
     clipPlayer();
     if (player == NULL && --stageResetTimer <= 0) 
     {
-        resetStage();
-    }
-}
-
-static void doBackground(void)
-{
-    if (--backgroundX < -SCREEN_WIDTH)
-    {
-        backgroundX = 0;
-    }
-}
-
-static void doStarfield(void)
-{
-    int i;
-    for (i = 0; i < MAX_STARS; i++)
-    {
-        stars[i].x -= stars[i].speed;
-        if (stars[i].x < 0)
-            stars[i].x = SCREEN_WIDTH + stars[i].x;
+        addHighscore(stage.score);
+        initHighscores();
     }
 }
 
 static void doPlayer(void)
 {
-    player->dx = player->dy = 0;
-    if (player->reload > 0) player->reload--;
-    if (app.keyboard[SDL_SCANCODE_UP]) player->dy = -PLAYER_SPEED;
-    if (app.keyboard[SDL_SCANCODE_DOWN]) player->dy = PLAYER_SPEED;
-    if (app.keyboard[SDL_SCANCODE_LEFT]) player->dx = -PLAYER_SPEED;
-    if (app.keyboard[SDL_SCANCODE_RIGHT]) player->dx = PLAYER_SPEED;
-    if (app.keyboard[SDL_SCANCODE_SPACE] && player->reload == 0)
-    {
-        fireBullet();
-        playSound(SND_PLAYER_FIRE, CH_PLAYER);
+    if (player != NULL) {
+        player->dx = player->dy = 0;
+        if (player->reload > 0) player->reload--;
+        if (app.keyboard[SDL_SCANCODE_UP]) player->dy = -PLAYER_SPEED;
+        if (app.keyboard[SDL_SCANCODE_DOWN]) player->dy = PLAYER_SPEED;
+        if (app.keyboard[SDL_SCANCODE_LEFT]) player->dx = -PLAYER_SPEED;
+        if (app.keyboard[SDL_SCANCODE_RIGHT]) player->dx = PLAYER_SPEED;
+        if (app.keyboard[SDL_SCANCODE_SPACE] && player->reload == 0)
+        {
+            fireBullet();
+            playSound(SND_PLAYER_FIRE, CH_PLAYER);
+        }
     }
 }
 
@@ -476,7 +443,6 @@ static void doPointsPods(void)
         {
             e->health = 0;
             stage.score++;
-            highscore = MAX(stage.score, highscore);
             playSound(SND_POINTS, CH_POINTS);
         }
 
@@ -630,37 +596,6 @@ static void drawBullets(void)
     }
 }
 
-static void drawStarfield(void)
-{
-    int i, c;
-    for (i = 0; i < MAX_STARS; i++)
-    {
-        c = 32 * stars[i].speed;
-        SDL_SetRenderDrawColor(app.renderer, c, c, c, 255);
-        SDL_RenderDrawLine(app.renderer, 
-                           stars[i].x, 
-                           stars[i].y, 
-                           stars[i].x + 3, 
-                           stars[i].y);
-    }
-}
-
-static void drawBackground(void)
-{
-    SDL_Rect dest;
-    int x;
-
-    for (x = backgroundX; x < SCREEN_WIDTH; x += SCREEN_WIDTH)
-    {
-        dest.x = x;
-        dest.y = 0;
-        dest.w = SCREEN_WIDTH;
-        dest.h = SCREEN_HEIGHT;
-
-        SDL_RenderCopy(app.renderer, background, NULL, &dest);
-    }
-}
-
 static void drawDebris(void)
 {
     Debris *d;
@@ -692,8 +627,8 @@ static void drawHud(void)
 {
     drawText(10, 10, 255, 255, 255, "SCORE: %03d", stage.score);
 
-    if (stage.score > 0 && stage.score == highscore)
-        drawText(1020, 10, 0, 255, 0, "HIGHSCORE: %03d", highscore);
+    if (stage.score < highscores.highscore[0].score)
+        drawText(1020, 10, 0, 255, 0, "HIGHSCORE: %03d", highscores.highscore[0].score);
     else
-        drawText(1020, 10, 255, 255, 255, "HIGHSCORE: %03d", highscore);
+        drawText(1020, 10, 255, 255, 255, "HIGHSCORE: %03d", stage.score);
 }
