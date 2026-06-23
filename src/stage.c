@@ -313,7 +313,7 @@ static int bulletHitFighter(Entity *b)
 
             if (e == player)
             {
-                playSound(SND_PLAYER_DIE, CH_PLAYER);  
+                playSound(SND_PLAYER_DIE, CH_PLAYER);
             } 
             else 
             {

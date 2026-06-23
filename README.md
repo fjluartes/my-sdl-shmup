@@ -5,10 +5,10 @@ Shoot-em-up in SDL2
 From [Parallel Realities SDL2 tutorial](https://www.parallelrealities.co.uk/tutorials/)
 
 ## TODO
-- [x] 15 Title screen/finishing touches
-- [ ] 15 exercises
 
 ## DONE
+- [x] 15 Title screen/finishing touches
+- [x] 15 exercises
 - [x] 14 Highscore table 2
 - [x] 14 exercises
 - [x] 13 Highscore table 1
