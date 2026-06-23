@@ -577,9 +577,13 @@ static void draw(void)
 static void drawPointsPods(void)
 {
     Entity *e;
+
     for (e = stage.pointsHead.next; e != NULL; e = e->next)
     {
-        blit(e->texture, e->x, e->y);
+        if (e->health > (FPS * 2) || e->health % 12 < 6)
+        {
+            blit(e->texture, e->x, e->y);    
+        }
     }
 }
 
