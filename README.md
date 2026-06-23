@@ -5,7 +5,7 @@ Shoot-em-up in SDL2
 From [Parallel Realities SDL2 tutorial](https://www.parallelrealities.co.uk/tutorials/)
 
 ## TODO
-- [ ] 15 Title screen/finishing touches
+- [x] 15 Title screen/finishing touches
 - [ ] 15 exercises
 
 ## DONE
