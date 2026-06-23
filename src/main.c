@@ -6,10 +6,10 @@
 #include "common.h"
 
 #include "draw.h"
-#include "highscores.h"
 #include "init.h"
 #include "input.h"
 #include "main.h"
+#include "title.h"
 
 App app;
 Highscores highscores;
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 
 	initGame();
 
-	initHighscores();
+	initTitle();
 
 	then = SDL_GetTicks();
 
