@@ -209,10 +209,15 @@ static void doEnemies(void)
     Entity *e;
     for (e = stage.fighterHead.next; e != NULL; e = e->next)
     {
-        if (e != player && player != NULL && --e->reload <= 0)
+        if (e != player)
         {
-            fireAlienBullet(e);
-            playSound(SND_ALIEN_FIRE, CH_ALIEN_FIRE);
+            e->y = MIN(MAX(e->y, 0), SCREEN_HEIGHT - e->h);
+
+            if (player != NULL && --e->reload <= 0)
+            {
+                fireAlienBullet(e);
+                playSound(SND_ALIEN_FIRE, CH_ALIEN_FIRE);
+            }
         }
     }
 }
@@ -337,12 +342,15 @@ static void spawnEnemies(void)
         SDL_QueryTexture(enemy->texture, NULL, NULL, &enemy->w, &enemy->h);
 
         enemy->dx = -(2 + (rand() % 4));
+        enemy->dy = -100 + (rand() % 200);
+        enemy->dy /= 100;
 
         enemy->side = SIDE_ALIEN;
         enemy->health = 1;
 
         enemy->reload = FPS * (1 + (rand() % 3));
-        enemySpawnTimer = 30 + (rand() % 60);
+
+        enemySpawnTimer = 30 + (rand() % FPS);
     }
 }
 
